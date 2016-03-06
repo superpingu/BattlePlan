@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Battle Plan</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/font-awesome.css">
+  </head>
+  <body>
+    <div class="topbar"><img src="images/raven.svg" class="topbar-icon">
+      <h2 class="topbar-title">Battle Plan</h2>
+    </div>
+    <div class="content"><img src="images/table1.svg" class="table-layout">
+      <canvas id="table" class="table-layout"></canvas><img src="images/side.svg" class="table-side-layout">
+      <div class="tools">
+        <h2> <span class="fa fa-star"></span>Coquillages :</h2>
+        <div class="selector">
+          <table>
+            <tr>
+              <td id="select1" class="select"></td>
+              <td id="select2" class="select"></td>
+              <td id="select3" class="select"></td>
+              <td id="select4" class="select"></td>
+              <td id="select5" class="select"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="scripts/socket.io.js"></script>
+    <script src="scripts/paper.js"></script>
+    <script src="scripts/main.js"></script>
+    <script type="text/paperscript" src="scripts/paths.js" canvas="table"></script>
+  </body>
+</html>

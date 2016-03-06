@@ -1,0 +1,34 @@
+//output:index.html, pretty:true
+
+doctype html
+html(lang="fr")
+    head
+        title Battle Plan
+        link(rel='stylesheet', href='styles/style.css')
+        link(rel='stylesheet', href='styles/font-awesome.css')
+    body
+        div.topbar
+            img(src="images/raven.svg").topbar-icon
+            h2.topbar-title Battle Plan
+        div.content
+            img(src="images/table1.svg").table-layout
+            canvas#table.table-layout
+            img(src="images/side.svg").table-side-layout
+            div.tools
+                h2 
+                    span.fa.fa-star
+                    | Coquillages :
+                div.selector
+                    table
+                        tr
+                            td.select#select1
+                            td.select#select2
+                            td.select#select3
+                            td.select#select4
+                            td.select#select5
+            
+        script(src="bower_components/jquery/dist/jquery.min.js")
+        script(src="scripts/socket.io.js")
+        script(src="scripts/paper.js")
+        script(src="scripts/main.js")
+        script(type="text/paperscript" src="scripts/paths.js" canvas="table")
