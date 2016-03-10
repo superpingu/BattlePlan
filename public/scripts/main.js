@@ -1,4 +1,23 @@
 var tableConfig = 1;
+window.globals = {onNewPath: onNewPath};
+
+function dumpPoints(points) {
+    var result = "struct robotPoint path[] = {<br>";
+    for(var i in points) {
+        result += "&nbsp;&nbsp;&nbsp;&nbsp;{"+points[i].x+","+points[i].y+"}";
+        if(i == (points.length - 1))
+            result += "<br>";
+        else
+            result += ",<br>";
+    }
+    return result + "}";
+}
+function onNewPath() {
+    var path = window.globals.getSelected();
+    path.onChange(function () {
+        $('.points').html(dumpPoints(path.getPoints()));
+    });
+}
 
 $(function () {
     $(".select").mouseup(function () {

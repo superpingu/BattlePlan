@@ -12,7 +12,7 @@ function RobotPath(pointsToAdd) {
     var path = new Path();
     var points = [];
     var selected = false;
-
+    var changeCallback = function () {};
     path.strokeWidth = 2;
 
     function select() {
@@ -60,6 +60,7 @@ function RobotPath(pointsToAdd) {
                     y = event.point.y;
                 }
             }
+            changeCallback();
             event.stop();
         };
         point.onMouseDown = function (event) {
@@ -74,6 +75,7 @@ function RobotPath(pointsToAdd) {
             path.insert(index, new Point(x, y));
             points.splice(index, 0, point);
         }
+        changeCallback();
     }
     function removePoint(x, y) {
         var index = (typeof y == "undefined") ? x : getPointIndex(x, y);
@@ -81,13 +83,25 @@ function RobotPath(pointsToAdd) {
             points[index].remove();
             path.removeSegment(index);
             points.splice(index, 1);
+            changeCallback();
         }
     }
     function clear() {
         while(points.length > 0)
             removePoint(0);
     }
-
+    function getPoints() {
+        function convertPoint(point) {
+            return {
+                y: 2000 - Math.round(point.position.x*2000/view.size.width),
+                x: Math.round(point.position.y*3000/view.size.height)
+            };
+        }
+        var result = [];
+        for(var i in points)
+            result.push(convertPoint(points[i]));
+        return result;
+    }
     for(var i in pointsToAdd) {
         addPoint(pointsToAdd[i].x, pointsToAdd[i].y);
     }
@@ -101,7 +115,7 @@ function RobotPath(pointsToAdd) {
         addPoint: addPoint,
         removePoint: removePoint,
         clear: clear,
-        getPoints: function () { return points; },
+        getPoints: getPoints,
         select: select,
         deselect: deselect,
         selected: function (isSelected) {
@@ -115,7 +129,8 @@ function RobotPath(pointsToAdd) {
         },
         distance: function(point) {
             return path.getNearestLocation(point);
-        }
+        },
+        onChange: function (callback) { changeCallback = callback; }
     };
 }
 
@@ -134,6 +149,7 @@ function onMouseDown(event) {
     }
     if(selectedPath === "") {
         createPath();
+        globals.onNewPath();
     } else if((event.modifiers.option || event.modifiers.alt) && getSelected().distance(event.point)){
         var distance = Math.abs((getSelected().distance(event.point).point - event.point).length);
         if(distance < 3) {
@@ -144,3 +160,5 @@ function onMouseDown(event) {
     console.dir();
     getSelected().addPoint(event.point.x, event.point.y);
 }
+
+globals.getSelected = getSelected;
