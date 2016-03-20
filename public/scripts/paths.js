@@ -11,6 +11,11 @@ function RobotPath(pointsToAdd) {
     var name = generateName();
     var path = new Path();
     var points = [];
+    var skirts = [];
+    var robotWheels = 0;
+    var robotAngle = 0;
+    var isBigRobot = false;
+    var robot = createRobot(false);
     var selected = false;
     var changeCallback = function () {};
     path.strokeWidth = 2;
@@ -21,6 +26,7 @@ function RobotPath(pointsToAdd) {
         path.strokeColor = "rgb(10, 43, 66)";
         for (var i = 0; i < points.length; i++) {
             points[i].visible = true;
+            skirts[i].visible = true;
         }
     }
     function deselect() {
@@ -28,7 +34,9 @@ function RobotPath(pointsToAdd) {
         selected = false;
         for (var i = 0; i < points.length; i++) {
             points[i].visible = false;
+            skirts[i].visible = false;
         }
+        robot.visible = false;
     }
 
     function getPointIndex(x, y) {
@@ -37,12 +45,20 @@ function RobotPath(pointsToAdd) {
                 return i;
         return -1;
     }
+    function vec2angle(vec) {
+        var rad = Math.atan2(vec.x, vec.y);
+        return 180-rad*180/Math.PI;
+    }
     function addPoint(x, y, index) {
+        var skirt = new Path.Circle(new Point(x, y), 20);
         var point = new Path.Circle(new Point(x, y), 3);
         point.fillColor = "black";
         point.strokeColor = "black";
+        skirt.fillColor = "black";
+        skirt.opacity = 0;
 
         point.onMouseEnter = function (event) {
+            robot.visible = true;
             document.body.style.cursor = "crosshair";
             this.fillColor = selected ? "red" : "black";
         };
@@ -50,14 +66,31 @@ function RobotPath(pointsToAdd) {
             document.body.style.cursor = "default";
             this.fillColor = "black";
         };
+        skirt.onMouseEnter = function (event) {
+            robot = createRobot(isBigRobot);
+            robot.position = new Point(x, y-robotWheels);
+            robot.pivot = new Point(x,y);
+            robot.visible = true;
+        };
+        skirt.onMouseMove = function (event) {
+            var angle = vec2angle(event.point-new Point(x,y));
+            robot.rotate(angle-robotAngle);
+            robotAngle = angle;
+        };
+        skirt.onMouseLeave = function (event) {
+            robot.visible = false;
+        };
+
         point.onMouseDrag = function (event) {
             if(selected) {
                 var index = getPointIndex(x, y);
                 if(index > -1) {
                     point.position = event.point;
+                    skirt.position = event.point;
                     path.segments[index].point = event.point;
                     x = event.point.x;
                     y = event.point.y;
+                    skirt.onMouseEnter();
                 }
             }
             changeCallback();
@@ -68,12 +101,16 @@ function RobotPath(pointsToAdd) {
                 removePoint(x, y);
             ignore = true;
         };
+
+        skirt.onMouseEnter();
         if(typeof index === "undefined") {
             path.add(new Point(x, y));
             points.push(point);
+            skirts.push(skirt);
         } else{
             path.insert(index, new Point(x, y));
             points.splice(index, 0, point);
+            skirts.splice(index, 0, skirt);
         }
         changeCallback();
     }
@@ -83,6 +120,7 @@ function RobotPath(pointsToAdd) {
             points[index].remove();
             path.removeSegment(index);
             points.splice(index, 1);
+            skirts.splice(index, 1);
             changeCallback();
         }
     }
@@ -102,6 +140,25 @@ function RobotPath(pointsToAdd) {
             result.push(convertPoint(points[i]));
         return result;
     }
+    function createRobot(big) {
+        var bot, size;
+        if(typeof robot !== "undefined")
+            robot.remove();
+        if(big) {
+            size = new Size(view.size.width*290/2000, view.size.height*270/3000);
+            robotWheels = 0;
+        } else {
+            size = new Size(view.size.width*208/2000, view.size.height*153/3000);
+            robotWheels = 0.253*view.size.height*153/3000;
+        }
+        bot = new Path.Rectangle(new Point(0,0), size);
+        bot.visible = false;
+        bot.strokeWidth = 1;
+        bot.strokeColor = "black";
+        robotAngle = 0;
+        return bot;
+    }
+
     for(var i in pointsToAdd) {
         addPoint(pointsToAdd[i].x, pointsToAdd[i].y);
     }
@@ -130,7 +187,8 @@ function RobotPath(pointsToAdd) {
         distance: function(point) {
             return path.getNearestLocation(point);
         },
-        onChange: function (callback) { changeCallback = callback; }
+        onChange: function (callback) { changeCallback = callback; },
+        setRobot: function (big) { isBigRobot = big=='big'; }
     };
 }
 
