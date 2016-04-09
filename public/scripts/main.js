@@ -1,6 +1,12 @@
 var tableConfig = 1;
 window.globals = {onNewPath: onNewPath};
 
+var socket = io.connect("http://abonetti.fr:3004/client");
+socket.on('pathUpdate', function(data) {
+    paths = data;
+    viewUpdate();
+});
+
 function dumpPoints(points) {
     var result = "struct robotPoint path[] = {<br>";
     for(var i in points) {

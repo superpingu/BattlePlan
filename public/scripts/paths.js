@@ -152,6 +152,7 @@ function RobotPath(pointsToAdd) {
             robotWheels = 0.253*view.size.height*153/3000;
         }
         bot = new Path.Rectangle(new Point(0,0), size);
+
         bot.visible = false;
         bot.strokeWidth = 1;
         bot.strokeColor = "black";
@@ -192,8 +193,8 @@ function RobotPath(pointsToAdd) {
     };
 }
 
-function createPath() {
-    var path = RobotPath();
+function createPath(pointsToAdd, name) {
+    var path = RobotPath(pointsToAdd, name);
     paths[path.name()] = path;
 }
 function getSelected() {
