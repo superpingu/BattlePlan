@@ -1,0 +1,22 @@
+div.path-options
+    | Vitesse de croisi&egrave;re :&nbsp;
+    input(type="number", value="#{path.cruiseSpeed}").cruiseSpeed
+    | &nbsp;m/s
+    br
+    | Vitesse de fin :&nbsp;
+    input(type="number", value="#{path.endSpeed}").endSpeed
+    | &nbsp;m/s
+    br
+    input(type="checkbox", checked="#{path.teamMirror}").teamMirror
+    | Mirroir &eacute;quipes
+    br
+    input(type="checkbox", checked="#{path.green[currentConfig].configLink != 0}").configLinkEnable
+    | Config actuelle identique &agrave; config&nbsp;
+    select.configLink
+        option(value="1") 1
+        option(value="2") 2
+        option(value="3") 3
+        option(value="4") 4
+        option(value="5") 5
+    br
+    

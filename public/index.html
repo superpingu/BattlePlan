@@ -7,12 +7,12 @@
   </head>
   <body>
     <div class="topbar"><img src="images/raven.svg" class="topbar-icon">
-      <h2 class="topbar-title">Battle Plan</h2>
+      <h2 class="topbar-title">Battle Plan</h2><a class="btn smallpi disabled"> <span class="smallicon fa fa-download"></span>Petit Robot</a><a class="btn bigpi disabled"> <span class="bigicon fa fa-download"></span>Gros Robot</a>
     </div>
     <div class="content"><img src="images/table1.svg" class="table-layout">
       <canvas id="table" class="table-layout"></canvas><img src="images/side.svg" class="table-side-layout">
       <div class="tools">
-        <h2> <span class="fa fa-star"></span>Coquillages :</h2>
+        <h2> <span class="fa fa-star"></span>Coquillages</h2><br>
         <div class="selector">
           <table>
             <tr>
@@ -24,14 +24,17 @@
             </tr>
           </table>
         </div><br>
-        <h2> <span class="fa fa-code"></span>Code C :</h2>
-        <div class="points"></div>
+        <h2> <span class="fa fa-map-o"></span>Chemins</h2><a class="btn btn-tab smalltab">petit robot</a><a class="btn btn-tab bigtab selected-tab">gros robot</a>
+        <div id="biglist" class="path-list"></div>
+        <div id="smalllist" class="path-list"></div>
       </div>
     </div>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="scripts/socket.io.js"></script>
     <script src="scripts/paper.js"></script>
+    <script src="scripts/templates.js"></script>
     <script src="scripts/tools.js"></script>
+    <script src="scripts/sidebar.js"></script>
     <script src="scripts/main.js"></script>
     <script type="text/paperscript" src="scripts/paths.js" canvas="table"></script>
   </body>

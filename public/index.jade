@@ -10,6 +10,12 @@ html(lang="fr")
         div.topbar
             img(src="images/raven.svg").topbar-icon
             h2.topbar-title Battle Plan
+            a.btn.smallpi.disabled 
+                span.smallicon.fa.fa-download
+                | Petit Robot
+            a.btn.bigpi.disabled 
+                span.bigicon.fa.fa-download
+                | Gros Robot
         div.content
             img(src="images/table1.svg").table-layout
             canvas#table.table-layout
@@ -17,7 +23,8 @@ html(lang="fr")
             div.tools
                 h2 
                     span.fa.fa-star
-                    | Coquillages :
+                    | Coquillages
+                br
                 div.selector
                     table
                         tr
@@ -28,12 +35,17 @@ html(lang="fr")
                             td.select#select5
                 br
                 h2 
-                    span.fa.fa-code
-                    | Code C :
-                div.points
+                    span.fa.fa-map-o
+                    | Chemins
+                a.btn.btn-tab.smalltab petit robot
+                a.btn.btn-tab.bigtab.selected-tab gros robot
+                div.path-list#biglist
+                div.path-list#smalllist
         script(src="bower_components/jquery/dist/jquery.min.js")
         script(src="scripts/socket.io.js")
         script(src="scripts/paper.js")
+        script(src="scripts/templates.js")
         script(src="scripts/tools.js")
+        script(src="scripts/sidebar.js")
         script(src="scripts/main.js")
         script(type="text/paperscript" src="scripts/paths.js" canvas="table")

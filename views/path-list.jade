@@ -1,0 +1,15 @@
+table
+    each path in paths
+        tr: td(id="#{path.name}").list-element
+            input(type="checkbox", checked="#{visibilities[path.name]}").pathVisibility
+            if editingPathname === path.name
+                input(type="text", value="#{path.name}").pathNameInput
+            else
+                span.pathName= path.name
+            span.fa.fa-trash.deletepath
+            if selected === path.name
+                include path-options.jade
+    tr: td.add-element
+        a.btn.add-element-btn
+            span.fa.fa-plus
+            | ajouter un chemin 

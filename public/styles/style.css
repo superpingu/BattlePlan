@@ -45,6 +45,15 @@ h3 {
   background-color: #3e3c41;
   color: #e8e3d4;
 }
+.disabled {
+    color: #ab271e;
+    border: 2px #ab271e solid;
+}
+.disabled:hover {
+    color: #ab271e;
+    border: 2px #ab271e solid;
+    background: none;
+}
 
 /* toolbar */
 .topbar {
@@ -57,6 +66,7 @@ h3 {
     background: #e4342a;
     box-sizing: border-box;
     box-shadow: 0 -1px 20px rgba(32, 34, 34, 0.8);
+    z-index: 10;
 }
 .topbar-icon {
     margin: 0.5vh;
@@ -70,40 +80,50 @@ h3 {
     font-weight: 500;
     font-size: 3.5vh;
 }
+.smallpi, .bigpi {
+    position: absolute;
+    top: -0.3vh;
+    right: 0;
+    font-size: 2vh;
+}
+.smallpi { right: 20vh; }
 
 /* content */
 .content {
-    position: relative;;
+    position: absolute;
     top: 10vh;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1000px;
-    width: 90vw;
+    width: 100%;
+    height: 90vh;
 }
 .table-layout {
     position: absolute;
     top: 0;
-    left: 0;
-    height: 87vmin;
-    width: 58vmin;
+    left: 3vw;
+    width: 60vw;
+    height: 40vw;
 }
 .table-side-layout {
     position: absolute;
-    top: 0;
-    left: 58vmin;
-    height: 87vmin;
+    top: 40vw;
+    left: 3vw;
+    width: 60vw;
 }
 .tools {
     position: absolute;
-    top: 0;
-    left: 70vmin;
-    right: 0;
+    top: -3vh;
+    left: 70vw;
+    height: 93vh;
+    width: 30vw;
+    background-color: #fefdfa;
+    box-sizing: border-box;
+    box-shadow: 0 -1px 40px rgba(32, 34, 34, 0.6);
 }
 .selector {
-    position: absolute;
+    position: relative;;
     background: url("../images/select1.svg") no-repeat;
-    top: 2vh;
-    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -3vh;
     width: 30vmin;
     height: 5vmin;
 }
@@ -120,7 +140,70 @@ h3 {
     font-size: 1vw;
     overflow-y: scroll;
 }
-
+.btn-tab, .btn-tab:hover {
+    position: absolute;
+    width: 15vw;
+    height: 3vh;
+    border-radius: 5px 5px 0 0;
+    top: 22vh;
+    left: 0vw;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 2px #3e3c41 solid inner;
+    font-size: 1.8vh;
+}
+.smalltab, .smalltab:hover {
+    left: auto;
+    right: 0vw;
+}
+.selected-tab, .selected-tab:hover {
+    border-bottom: 0;
+    background: none;
+    color: #3e3c41;
+}
+.path-list {
+    position: absolute;
+    top: 25vh;
+    height: 68vh;
+    width: 30vw;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 2px #3e3c41 solid;
+    border-top: 0;
+}
+.path-list table {
+    margin-top: 2vh;
+    font-size: 2.5vh;
+    width: 100%;
+}
+.path-list input, .path-list select {
+    font-size: 2vh;
+    height: 2.5vh;
+}
+.path-list tr {
+    height: 3vh;
+}
+.list-element, .add-element {
+    position: relative;
+    height: 3vh;
+}
+.add-element { text-align: center;}
+.add-element-btn, .add-element-btn:hover {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+.endSpeed, .cruiseSpeed {
+    width: 5vw;
+}
+.pathVisibility, .teamMirror, .configLinkEnable {
+    margin-right: 2vw;
+}
 @font-face {
   font-family: 'Kirvy';
   font-style: normal;
