@@ -117,6 +117,7 @@ h3 {
     background-color: #fefdfa;
     box-sizing: border-box;
     box-shadow: 0 -1px 40px rgba(32, 34, 34, 0.6);
+    min-height: 600px;
 }
 .selector {
     position: relative;;
@@ -141,12 +142,12 @@ h3 {
     overflow-y: scroll;
 }
 .btn-tab, .btn-tab:hover {
-    position: absolute;
+    position: relative;;
     width: 15vw;
     height: 3vh;
     border-radius: 5px 5px 0 0;
-    top: 22vh;
     left: 0vw;
+    top:-1vh;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -175,11 +176,15 @@ h3 {
     -webkit-box-sizing: border-box;
     border: 2px #3e3c41 solid;
     border-top: 0;
+    overflow-y: scroll;
 }
 .path-list table {
     margin-top: 2vh;
     font-size: 2.5vh;
     width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border-spacing: 0;
 }
 .path-list input, .path-list select {
     font-size: 2vh;
@@ -187,12 +192,44 @@ h3 {
 }
 .path-list tr {
     height: 3vh;
+    margin:0;
+    padding: 0;
+}
+.path-list td {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-bottom: 2px #3e3c41 solid;
+    margin: 0;
+    padding: 0;
 }
 .list-element, .add-element {
     position: relative;
     height: 3vh;
+    margin: 0;
+    padding: 0.5vh;
 }
-.add-element { text-align: center;}
+.list-element {
+    padding-left: 1.5vw;
+}
+.path-options {
+    padding: 1vw;
+    padding-bottom: 0;
+    font-size: 2vh;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    box-shadow: 0 -1px 1.5vw rgba(32, 34, 34, 0.4) inset;
+    background-color: #fdfff7;
+}
+.selected-list-element {
+    background-color: #3e3c41;
+    color: #fefdfa;
+}
+.add-element {
+    text-align: center;
+    border-bottom: none !important;
+}
 .add-element-btn, .add-element-btn:hover {
     position: relative;
     margin-left: auto;
@@ -201,8 +238,41 @@ h3 {
 .endSpeed, .cruiseSpeed {
     width: 5vw;
 }
-.pathVisibility, .teamMirror, .configLinkEnable {
+.fa-trash {
+    position: absolute;
+    right: 1vw;
+    color: #e4342a;
+}
+.selected-list-element .fa-trash {
+    color: #f2665e;
+}
+.pathVisibility {
     margin-right: 2vw;
+}
+ .teamMirror, .configLinkEnable {
+    margin-right: 1vw;
+}
+.point-x, .point-y {
+    width: 7vw;
+}
+.points-table {
+    position: relative;
+    top: -2vh;
+    width: 100%;
+}
+.points-table td {
+    border-bottom: none;
+    font-size: 2vh;
+}
+.points-table input {
+    font-size: 2vh;
+}
+.points-index {
+    width: 5vw;
+    text-align: center;
+}
+.initAngle {
+    width: 4vw;
 }
 @font-face {
   font-family: 'Kirvy';

@@ -1,6 +1,7 @@
-window.globals = {onNewPath: onNewPath};
-var smallConnected = false, bigConnected = false;
+window.globals = {updatePath: updatePath, onPathSelect: onPathSelect};
 
+// connections to the robots
+var smallConnected = false, bigConnected = false;
 var socket = io.connect("http://abonetti.fr:3004/client");
 socket.on('pathUpdate', function(data) {
     paths = data;
@@ -23,23 +24,6 @@ socket.on('bigDisconnected', function() {
     $('.bigpi').addClass('disabled');
 });
 
-function dumpPoints(points) {
-    var result = "struct robotPoint path[] = {<br>";
-    for(var i in points) {
-        result += "&nbsp;&nbsp;&nbsp;&nbsp;{"+points[i].x+","+points[i].y+"}";
-        if(i == (points.length - 1))
-            result += "<br>";
-        else
-            result += ",<br>";
-    }
-    return result + "}";
-}
-function onNewPath() {
-    var path = window.globals.getSelected();
-    path.onChange(function () {
-        $('.points').html(dumpPoints(path.getPoints()));
-    });
-}
 // change the icon of the robot download buttons
 function setRobotIcon(icon, ok) {
     if(ok) {

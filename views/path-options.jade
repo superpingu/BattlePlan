@@ -7,16 +7,42 @@ div.path-options
     input(type="number", value="#{path.endSpeed}").endSpeed
     | &nbsp;m/s
     br
-    input(type="checkbox", checked="#{path.teamMirror}").teamMirror
+    input(type="checkbox", checked=(path.teamMirror ? "checked" : undefined)).teamMirror
     | Mirroir &eacute;quipes
     br
-    input(type="checkbox", checked="#{path.green[currentConfig].configLink != 0}").configLinkEnable
+    input(type="checkbox", checked=(path.green[tableConfig].configLink != -1 ? "checked" : undefined)).configLinkEnable
     | Config actuelle identique &agrave; config&nbsp;
-    select.configLink
-        option(value="1") 1
-        option(value="2") 2
-        option(value="3") 3
-        option(value="4") 4
-        option(value="5") 5
+    if path.green[tableConfig].configLink == -1
+        select(disabled).configLink
+            option(value="0") 1
+            option(value="1") 2
+            option(value="2") 3
+            option(value="3") 4
+            option(value="4") 5
+    else
+        select().configLink
+            option(value="0", selected=(path.green[tableConfig].configLink == 0 ? "selected" : undefined)) 1
+            option(value="1", selected=(path.green[tableConfig].configLink == 1 ? "selected" : undefined)) 2
+            option(value="2", selected=(path.green[tableConfig].configLink == 2 ? "selected" : undefined)) 3
+            option(value="3", selected=(path.green[tableConfig].configLink == 3 ? "selected" : undefined)) 4
+            option(value="4", selected=(path.green[tableConfig].configLink == 4 ? "selected" : undefined)) 5
     br
-    
+    br
+    | Cap initial :&nbsp;
+    input(type="number", value="#{path[selectedTeam][tableConfig].initAngle}").initAngle
+    | &nbsp;&deg;
+    br
+    | Points :
+    table.points-table
+        if path[selectedTeam][tableConfig].points.length == 0
+            br 
+            p(style="text-align:center; margin:0") cliquer sur la table pour ajouter des points
+        else
+            -var i = 0;
+            each point in path[selectedTeam][tableConfig].points
+                tr
+                    td.points-index=++i
+                    td x : &nbsp;
+                        input(type="number", value="#{point.x}", data-index="#{i-1}").point-x
+                    td y : &nbsp;
+                        input(type="number", value="#{point.y}", data-index="#{i-1}").point-y

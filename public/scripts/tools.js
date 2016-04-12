@@ -4,18 +4,101 @@ var paths = {big: {}, small:{}, nameIndexbig:1, nameIndexsmall: 1};
 var visibilities = {big: {}, small:{}};
 var serverUpdateNeeded = false; // true if new data need to be sent to the server
 
-var tableConfig = 1;
+var tableConfig = 0;
 
+function decomposeViewPath(name) {
+    var decompose = name.split('.');
+    return {
+        robot: decompose[0],
+        name: decompose[1],
+        team: decompose[2]
+    };
+}
 // refresh the table view to match the content of paths
 function updateView() {
-    for (var path in paths) {
-        if (paths.hasOwnProperty(path)) {
-            // add new paths
-            // update existing paths
+    function updateRobotView(robot) {
+        for (var path in paths[robot]) {
+            if (paths[robot].hasOwnProperty(path)) {
+                window.globals.setPath(
+                    robot+'.'+path+'.green',
+                    paths[robot][path].green[tableConfig].points,
+                    paths[robot][path].green[tableConfig].initAngle
+                );
+                window.globals.getPaths()[robot+'.'+path+'.green'].setRobot(robot);
+                window.globals.getPaths()[robot+'.'+path+'.green'].visible(visibilities[robot][path]);
+                window.globals.setPath(
+                    robot+'.'+path+'.purple',
+                    paths[robot][path].purple[tableConfig].points,
+                    paths[robot][path].purple[tableConfig].initAngle
+                );
+                window.globals.getPaths()[robot+'.'+path+'.purple'].setRobot(robot);
+                window.globals.getPaths()[robot+'.'+path+'.purple'].visible(visibilities[robot][path]);
+            }
         }
     }
+    updateRobotView('small');
+    updateRobotView('big');
     // delete removed paths
+    for (var viewPath in window.globals.getPaths()) {
+        var p = decomposeViewPath(viewPath);
+        if (window.globals.getPaths().hasOwnProperty(viewPath) && !paths[p.robot].hasOwnProperty(p.name)) {
+            window.globals.getPaths()[viewPath].remove();
+        }
+    }
+    // refresh view
+    paper.project._needsUpdate = true;
+    paper.project.view.update();
+}
+function updatePath(name) {
+    var p = decomposeViewPath(name);
+    var opposedTeam = p.team === 'green' ? 'purple' : 'green';
+    // true if a change in current config should change config i
+    function isLinked(i) {
+        var iLink = paths[p.robot][p.name][p.team][i].configLink;
+        var currentLink = paths[p.robot][p.name][p.team][tableConfig].configLink;
+        return  iLink == tableConfig || (iLink != -1 && iLink == currentLink) || i == currentLink;
+    }
+    function mirrorPoints(points) {
+        var result = [];
+        for (var i in points)
+            result.push({x: 3000 - points[i].x, y: points[i].y});
+        return result;
+    }
+    var points = window.globals.getPaths()[name].getPoints();
+    var angle = window.globals.getPaths()[name].getInitAngle();
+    var opposedPoints = mirrorPoints(points), opposedAngle = (360 - angle) % 360;
 
+    paths[p.robot][p.name][p.team][tableConfig].points = points;
+    paths[p.robot][p.name][p.team][tableConfig].initAngle = angle;
+    if(paths[p.robot][p.name].teamMirror) {
+        paths[p.robot][p.name][opposedTeam][tableConfig].points = opposedPoints;
+        paths[p.robot][p.name][opposedTeam][tableConfig].initAngle = opposedAngle;
+        window.globals.setPath(p.robot+'.'+p.name+'.'+opposedTeam, opposedPoints, opposedAngle);
+        // refresh view
+        paper.project._needsUpdate = true;
+        paper.project.view.update();
+    }
+    for (var i = 0; i < 5; i++) {
+        if(i != tableConfig && isLinked(i)) {
+            paths[p.robot][p.name][p.team][i].points = points.slice(0);
+            paths[p.robot][p.name][p.team][i].initAngle = angle;
+            if(paths[p.robot][p.name].teamMirror) {
+                paths[p.robot][p.name][opposedTeam][i].points = opposedPoints.slice(0);
+                paths[p.robot][p.name][opposedTeam][i].initAngle = opposedAngle;
+            }
+        }
+    }
+    updateSidebar();
+    updateServer();
+}
+
+function onPathSelect(name) {
+    var path = decomposeViewPath(name);
+    activeList = path.robot;
+    selectedPath[activeList] = path.name;
+    selectedTeam = path.team;
+    updateSidebar();
+    updateTabs();
 }
 
 // send the current paths to the server
@@ -23,6 +106,7 @@ function updateServer() {
     serverUpdateNeeded = true;
     setRobotIcon(".smallicon", false);
     setRobotIcon(".bigicon", false);
+    console.log(paths);
 }
 
 // performs the actual send, not faster than every 500ms to avoid overloading the server
@@ -51,25 +135,43 @@ function processUpdateFromServer() {
     updateSidebar();
 }
 
-function renamePath(oldname, newname) {
-
+function selectPath(robot, name) {
+    globals.selectPath(robot, name);
+    paper.project._needsUpdate = true;
+    paper.project.view.update();
 }
-function deletePath(name) {
-
+function renamePath(robot, oldname, newname) {
+    if (oldname !== newname) {
+        if(!paths[robot].hasOwnProperty(oldname))
+            return;
+        Object.defineProperty(paths[robot], newname, Object.getOwnPropertyDescriptor(paths[robot], oldname));
+        delete paths[robot][oldname];
+        visibilities[robot][newname] = visibilities[robot][oldname];
+        delete visibilities[robot][oldname];
+        paths[robot][newname].name = newname;
+        updateView();
+        selectPath(robot, newname);
+        updateServer();
+    }
+}
+function deletePath(robot, name) {
+    delete paths[robot][name];
+    delete visibilities[robot][name];
+    updateView();
+    updateServer();
 }
 function createPath(robot) {
     var name = "chemin "+paths["nameIndex"+robot];
     paths["nameIndex"+robot]++;
-    var config = {points:{}, configLink:1, initAngle: 90};
-    var config1 = {points:{}, configLink:1, initAngle: -90};
     paths[robot][name] = {
         name: name,
         cruiseSpeed: 0.3,
         endSpeed: 0,
         teamMirror: true,
-        green: [{points:{}, configLink:0, initAngle:90}, config, config, config, config],
-        purple: [{points:{}, configLink:0, initAngle:-90}, config1, config1, config1, config1]
+        green: [{points:[], configLink:-1, initAngle:90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}],
+        purple: [{points:[], configLink:-1, initAngle:-90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}]
     };
+    visibilities[robot][name] = true;
     updateView();
     updateServer();
     return name;

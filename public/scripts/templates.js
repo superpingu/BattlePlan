@@ -198,9 +198,11 @@ buf.push('<table>');
       var path = paths[$index];
 
 buf.push('<tr><td');
-buf.push(attrs({ 'id':("" + (path.name) + ""), "class": ('list-element') }, {"id":true}));
-buf.push('><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (visibilities[path.name]) + ""), "class": ('pathVisibility') }, {"type":true,"checked":true}));
+buf.push(attrs({ 'id':("" + (path.name) + "") }, {"id":true}));
+buf.push('><p');
+buf.push(attrs({ "class": ("" + (path.name === selected ? 'selected-list-element':'') + "") + ' ' + ('list-element') }, {}));
+buf.push('>   <input');
+buf.push(attrs({ 'type':("checkbox"), 'checked':((visibilities[path.name] ? "checked" : undefined)), "class": ('pathVisibility') }, {"type":true,"checked":true}));
 buf.push('/>');
 if ( editingPathname === path.name)
 {
@@ -215,18 +217,79 @@ var __val__ = path.name
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span>');
 }
-buf.push('<span class="fa fa-trash deletepath"></span>');
-if ( selected == path.name)
+buf.push('<span class="fa fa-trash deletepath"></span></p>');
+if ( selected === path.name)
 {
 buf.push('<div class="path-options">Vitesse de croisi&egrave;re :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "class": ('cruiseSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.teamMirror) + ""), "class": ('teamMirror') }, {"type":true,"checked":true}));
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
 buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.green[currentConfig].configLink != 0) + ""), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;<select class="configLink"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select><br/></div>');
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
+buf.push('/>Config actuelle identique &agrave; config&nbsp;');
+if ( path.green[tableConfig].configLink == -1)
+{
+buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
+}
+else
+{
+buf.push('<select class="configLink"><option');
+buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>1</option><option');
+buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>2</option><option');
+buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>3</option><option');
+buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>4</option><option');
+buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>5</option></select>');
+}
+buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
+buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+if ( path[selectedTeam][tableConfig].points.length == 0)
+{
+buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
+}
+else
+{
+var i = 0;
+// iterate path[selectedTeam][tableConfig].points
+;(function(){
+  if ('number' == typeof path[selectedTeam][tableConfig].points.length) {
+    for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+    }
+  } else {
+    for (var $index in path[selectedTeam][tableConfig].points) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+   }
+  }
+}).call(this);
+
+}
+buf.push('</table></div>');
 }
 buf.push('</td></tr>');
     }
@@ -235,9 +298,11 @@ buf.push('</td></tr>');
       var path = paths[$index];
 
 buf.push('<tr><td');
-buf.push(attrs({ 'id':("" + (path.name) + ""), "class": ('list-element') }, {"id":true}));
-buf.push('><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (visibilities[path.name]) + ""), "class": ('pathVisibility') }, {"type":true,"checked":true}));
+buf.push(attrs({ 'id':("" + (path.name) + "") }, {"id":true}));
+buf.push('><p');
+buf.push(attrs({ "class": ("" + (path.name === selected ? 'selected-list-element':'') + "") + ' ' + ('list-element') }, {}));
+buf.push('>   <input');
+buf.push(attrs({ 'type':("checkbox"), 'checked':((visibilities[path.name] ? "checked" : undefined)), "class": ('pathVisibility') }, {"type":true,"checked":true}));
 buf.push('/>');
 if ( editingPathname === path.name)
 {
@@ -252,18 +317,79 @@ var __val__ = path.name
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span>');
 }
-buf.push('<span class="fa fa-trash deletepath"></span>');
-if ( selected == path.name)
+buf.push('<span class="fa fa-trash deletepath"></span></p>');
+if ( selected === path.name)
 {
 buf.push('<div class="path-options">Vitesse de croisi&egrave;re :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "class": ('cruiseSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.teamMirror) + ""), "class": ('teamMirror') }, {"type":true,"checked":true}));
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
 buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.green[currentConfig].configLink != 0) + ""), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;<select class="configLink"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select><br/></div>');
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
+buf.push('/>Config actuelle identique &agrave; config&nbsp;');
+if ( path.green[tableConfig].configLink == -1)
+{
+buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
+}
+else
+{
+buf.push('<select class="configLink"><option');
+buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>1</option><option');
+buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>2</option><option');
+buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>3</option><option');
+buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>4</option><option');
+buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>5</option></select>');
+}
+buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
+buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+if ( path[selectedTeam][tableConfig].points.length == 0)
+{
+buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
+}
+else
+{
+var i = 0;
+// iterate path[selectedTeam][tableConfig].points
+;(function(){
+  if ('number' == typeof path[selectedTeam][tableConfig].points.length) {
+    for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+    }
+  } else {
+    for (var $index in path[selectedTeam][tableConfig].points) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+   }
+  }
+}).call(this);
+
+}
+buf.push('</table></div>');
 }
 buf.push('</td></tr>');
    }
@@ -285,10 +411,71 @@ buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "cla
 buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.teamMirror) + ""), "class": ('teamMirror') }, {"type":true,"checked":true}));
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
 buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':("" + (path.green[currentConfig].configLink != 0) + ""), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;<select class="configLink"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select><br/></div>');
+buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
+buf.push('/>Config actuelle identique &agrave; config&nbsp;');
+if ( path.green[tableConfig].configLink == -1)
+{
+buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
+}
+else
+{
+buf.push('<select class="configLink"><option');
+buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>1</option><option');
+buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>2</option><option');
+buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>3</option><option');
+buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>4</option><option');
+buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
+buf.push('>5</option></select>');
+}
+buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
+buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+if ( path[selectedTeam][tableConfig].points.length == 0)
+{
+buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
+}
+else
+{
+var i = 0;
+// iterate path[selectedTeam][tableConfig].points
+;(function(){
+  if ('number' == typeof path[selectedTeam][tableConfig].points.length) {
+    for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+    }
+  } else {
+    for (var $index in path[selectedTeam][tableConfig].points) {
+      var point = path[selectedTeam][tableConfig].points[$index];
+
+buf.push('<tr><td class="points-index">');
+var __val__ = ++i
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</td><td>x : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td>y : &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td></tr>');
+   }
+  }
+}).call(this);
+
+}
+buf.push('</table></div>');
 }
 return buf.join("");
 }
