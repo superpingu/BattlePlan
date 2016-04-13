@@ -1,0 +1,27 @@
+#! /bin/sh
+# /etc/init.d/battleplan
+#
+
+### BEGIN INIT INFO
+# Provides:          battleplan
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts Battle plan
+# Description:       This service starts Battle Plan robot client
+### END INIT INFO
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    /usr/bin/forever start /var/apps/BattlePlan/robot/app.js
+    ;;
+  stop)
+    /usr/bin/forever stop /var/apps/BattlePlan/robot/app.js
+    ;;
+  *)
+    echo "Usage: /etc/init.d/battleplan {start|stop}"
+    exit 1
+    ;;
+esac
