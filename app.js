@@ -41,9 +41,9 @@ io.of('/smallpi').on('connection', function (socket) {
 // connection to clients
 io.of('/client').on('connection', function (socket) {
     socket.emit('pathUpdate', paths);
-    if(typeof smallRobot !== "undefined")
+    if(typeof smallRobot !== "undefined" && smallRobot !== null)
         socket.emit('smallConnected');
-    if(typeof bigRobot !== "undefined")
+    if(typeof bigRobot !== "undefined" && bigRobot !== null)
         socket.emit('bigConnected');
 
     socket.on('paths', function(data) {

@@ -31,23 +31,27 @@ function saveFile(name, content) {
 }
 function dumpPoints(points) {
     var str ='';
-    for (var i = 0; i < points.length; i++) {
+    if(points.length==1) {
+        return ' ' + points[0].x + ' ' + points[0].y;
+    }
+    // if more than one point, ignoring first point
+    for (var i = 1; i < points.length; i++) {
         str += ' ' + points[i].x + ' ' + points[i].y;
     }
     return str;
 }
 function mirrorPoints(points) {
-    var tab ='';
+    var tab = [];
     for (var i = 0; i < points.length; i++) {
         tab.push({x: 3000-points[i].x, y:points[i].y});
     }
     return tab;
 }
 function savePath(name, path) {
-    var prefix = path.cruiseSpeed + ' ' + path.endSpeed;
+    var prefix = path.endSpeed + ' ' + path.cruiseSpeed;
     console.log("Saving path "+ name);
     for (var i = 0; i < 5; i++) {
-        saveFile(pathsDir+name+'-green-'+i+'.path', prefix+dumpPoints(path.green[i].points));
-        saveFile(pathsDir+name+'-purple-'+i+'.path', prefix+dumpPoints(mirrorPoints(path.purple[i].points)));
+        saveFile(pathsDir+name+'-green-'+(i+1)+'.path', prefix+dumpPoints(path.green[i].points));
+        saveFile(pathsDir+name+'-purple-'+(i+1)+'.path', prefix+dumpPoints(mirrorPoints(path.purple[i].points)));
     }
 }
