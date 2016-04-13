@@ -57,6 +57,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
         return -1;
     }
     function updateInitRobot() {
+        if(points.length === 0)
+            return;
         createRobot(isBigRobot, true);
         initRobot.position = new Point(points[0].position.x, points[0].position.y-robotWheels);
         initRobot.pivot = new Point(points[0].position.x,points[0].position.y);
@@ -99,7 +101,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 ignore = true;
             };
             skirt.onMouseDrag = function (event) {
-                var angle = vec2angle(event.point-new Point(x,y));
+                var angle = Math.round(10*vec2angle(event.point-new Point(x,y)))/10;
                 initRobot.rotate(angle-initAngle);
                 initAngle = angle;
                 globals.updatePath(name);
