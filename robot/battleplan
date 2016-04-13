@@ -15,10 +15,10 @@
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    /usr/bin/forever start /var/apps/BattlePlan/robot/app.js
+    /usr/local/bin/forever start /var/apps/BattlePlan/robot/app.js
     ;;
   stop)
-    /usr/bin/forever stop /var/apps/BattlePlan/robot/app.js
+    /usr/local/bin/forever stop /var/apps/BattlePlan/robot/app.js
     ;;
   *)
     echo "Usage: /etc/init.d/battleplan {start|stop}"
