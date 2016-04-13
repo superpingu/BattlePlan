@@ -14,6 +14,7 @@ socket.on('disconnect', function(){
 });
 
 socket.on('paths', function(data) {
+    console.log("received paths");
     for (var path in data) {
         if (data.hasOwnProperty(path)) {
             savePath(path, data[path]);

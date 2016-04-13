@@ -19,9 +19,9 @@ var smallRobot, bigRobot;
 io.of('/bigpi').on('connection', function (socket) {
     bigRobot = socket;
     bigRobot.emit('paths', paths.big);
-    io.emit('bigConnected');
+    io.of('/client').emit('bigConnected');
     socket.on('disconnect', function() {
-        io.emit('bigDisconnected');
+        io.of('/client').emit('bigDisconnected');
         bigRobot = null;
         console.log("big robot disconnected");
     });
@@ -30,9 +30,9 @@ io.of('/bigpi').on('connection', function (socket) {
 io.of('/smallpi').on('connection', function (socket) {
     smallRobot = socket;
     smallRobot.emit('paths', paths.small);
-    io.emit('smallConnected');
+    io.of('/client').emit('smallConnected');
     socket.on('disconnect', function() {
-        io.emit('smallDisconnected');
+        io.of('/client').emit('smallDisconnected');
         smallRobot = null;
         console.log("small robot disconnected");
     });
