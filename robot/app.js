@@ -47,7 +47,7 @@ function savePath(name, path) {
     var prefix = path.cruiseSpeed + ' ' + path.endSpeed;
     console.log("Saving path "+ name);
     for (var i = 0; i < 5; i++) {
-        saveFile(pathsDir+name+'-green-'+i+'.path', prefix+dumpPoints(path.green[i].points));
-        saveFile(pathsDir+name+'-purple-'+i+'.path', prefix+dumpPoints(mirrorPoints(path.purple[i].points)));
+        saveFile(pathsDir+name+'-green-'+(i+1)+'.path', prefix+dumpPoints(path.green[i].points));
+        saveFile(pathsDir+name+'-purple-'+(i+1)+'.path', prefix+dumpPoints(mirrorPoints(path.purple[i].points)));
     }
 }
