@@ -1,5 +1,5 @@
 var name = require("/var/apps/rpc/config.json").name;
-var socket = require("socket.io-client")("http://abonetti.fr:3003/"+name);
+var socket = require("socket.io-client")("http://abonetti.fr:3004/"+name);
 var fs = require("fs");
 
 var pathsDir = "/var/paths/";
