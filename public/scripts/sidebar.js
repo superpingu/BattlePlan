@@ -10,7 +10,7 @@ function initList() {
         updateSidebar();
         $('.pathNameInput').focus();
     });
-    
+
     $('.pathNameInput')
     .click(function () {
         $(this).focus();
@@ -35,7 +35,6 @@ function initList() {
     });
     $('.pathVisibility').change(function () {
         var id = $(this).parent().parent().prop("id");
-        console.log(id);
         visibilities[activeList][id] = $(this).is(':checked');
         updateView();
     });
@@ -58,7 +57,6 @@ function initList() {
         var index = parseInt($(this).data("index"));
         if(!isNaN(value) && !isNaN(index)) {
             console.dir(paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig]);
-            console.log(index);
             paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig].points[index].x = value;
             updateView();
             updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
@@ -120,7 +118,6 @@ function initList() {
     });
     $(".configLink").change(function () {
         var configLink = $(this).val();
-        console.log(configLink);
         paths[activeList][selectedPath[activeList]].green[tableConfig].configLink = configLink;
         paths[activeList][selectedPath[activeList]].purple[tableConfig].configLink = configLink;
         // import path

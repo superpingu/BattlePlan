@@ -106,12 +106,12 @@ function updateServer() {
     serverUpdateNeeded = true;
     setRobotIcon(".smallicon", false);
     setRobotIcon(".bigicon", false);
-    console.log(paths);
 }
 
 // performs the actual send, not faster than every 500ms to avoid overloading the server
 setInterval(function () {
     if(serverUpdateNeeded && typeof socket !== 'undefined') {
+        serverUpdateNeeded = false;
         socket.emit('paths', paths);
     }
 }, 500);

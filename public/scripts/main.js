@@ -5,7 +5,7 @@ var smallConnected = false, bigConnected = false;
 var socket = io.connect("http://abonetti.fr:3004/client");
 socket.on('pathUpdate', function(data) {
     paths = data;
-    viewUpdate();
+    processUpdateFromServer();
 });
 socket.on('smallConnected', function() {
     smallConnected = true;
