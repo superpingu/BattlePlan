@@ -37,7 +37,7 @@ function dumpPoints(points) {
     return str;
 }
 function mirrorPoints(points) {
-    var tab ='';
+    var tab = [];
     for (var i = 0; i < points.length; i++) {
         tab.push({x: 3000-points[i].x, y:points[i].y});
     }
