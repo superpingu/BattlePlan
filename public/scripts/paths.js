@@ -101,7 +101,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 ignore = true;
             };
             skirt.onMouseDrag = function (event) {
-                var angle = vec2angle(event.point-new Point(x,y));
+                var angle = Math.round(10*vec2angle(event.point-new Point(x,y)))/10;
                 initRobot.rotate(angle-initAngle);
                 initAngle = angle;
                 globals.updatePath(name);
