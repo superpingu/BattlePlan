@@ -57,6 +57,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
         return -1;
     }
     function updateInitRobot() {
+        if(points.length === 0)
+            return;
         createRobot(isBigRobot, true);
         initRobot.position = new Point(points[0].position.x, points[0].position.y-robotWheels);
         initRobot.pivot = new Point(points[0].position.x,points[0].position.y);
