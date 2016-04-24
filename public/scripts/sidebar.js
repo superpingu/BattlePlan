@@ -5,7 +5,7 @@ var selectedTeam = 'green';
 
 function initList() {
     $('.pathName').dblclick(function () {
-        var id = $(this).parent().parent().attr("id");
+        var id = $(this).parent().parent().data("pathname");
         editingPathname = id;
         updateSidebar();
         $('.pathNameInput').focus();
@@ -20,7 +20,7 @@ function initList() {
         $(this).blur();
     })
     .blur(function() {
-        var id = $(this).parent().parent().attr("id");
+        var id = $(this).parent().parent().data("pathname");
         editingPathname = '';
         renamePath(activeList, id, $(this).val());
         selectedPath[activeList] = $(this).val();
@@ -28,18 +28,21 @@ function initList() {
     });
 
     $('.list-element').click(function () {
-        var id = $(this).parent().prop("id");
+        var id = $(this).parent().data("pathname");
         selectedPath[activeList] = id;
         updateSidebar();
         selectPath(activeList, id);
     });
+
     $('.pathVisibility').change(function () {
-        var id = $(this).parent().parent().prop("id");
+        var id = $(this).parent().parent().data("pathname");
         visibilities[activeList][id] = $(this).is(':checked');
+        saveVisibilities();
         updateView();
+        return false;
     });
     $('.deletepath').click(function () {
-        var id = $(this).parent().parent().prop("id");
+        var id = $(this).parent().parent().data("pathname");
         if(confirm("Voulez-vous vraiment supprimer "+id+" ?")) {
             deletePath(activeList, id);
             updateSidebar();

@@ -198,7 +198,7 @@ buf.push('<table>');
       var path = paths[$index];
 
 buf.push('<tr><td');
-buf.push(attrs({ 'id':("" + (path.name) + "") }, {"id":true}));
+buf.push(attrs({ 'data-pathname':("" + (path.name) + "") }, {"data-pathname":true}));
 buf.push('><p');
 buf.push(attrs({ "class": ("" + (path.name === selected ? 'selected-list-element':'') + "") + ' ' + ('list-element') }, {}));
 buf.push('>   <input');
@@ -298,7 +298,7 @@ buf.push('</td></tr>');
       var path = paths[$index];
 
 buf.push('<tr><td');
-buf.push(attrs({ 'id':("" + (path.name) + "") }, {"id":true}));
+buf.push(attrs({ 'data-pathname':("" + (path.name) + "") }, {"data-pathname":true}));
 buf.push('><p');
 buf.push(attrs({ "class": ("" + (path.name === selected ? 'selected-list-element':'') + "") + ' ' + ('list-element') }, {}));
 buf.push('>   <input');

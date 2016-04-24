@@ -1,7 +1,7 @@
 // contains the paths (with configs and teams)
 var paths = {big: {}, small:{}, nameIndexbig:1, nameIndexsmall: 1};
 
-var visibilities = {big: {}, small:{}};
+var visibilities = Cookies.getJSON('visibilities') ? Cookies.getJSON('visibilities') : {big: {}, small:{}};
 var serverUpdateNeeded = false; // true if new data need to be sent to the server
 
 var tableConfig = 0;
@@ -175,4 +175,8 @@ function createPath(robot) {
     updateView();
     updateServer();
     return name;
+}
+
+function saveVisibilities() {
+    Cookies.set('visibilities', visibilities, { expires: 14 });
 }

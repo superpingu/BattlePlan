@@ -1,6 +1,6 @@
 table
     each path in paths
-        tr: td(id="#{path.name}")
+        tr: td(data-pathname="#{path.name}")
             p(class="#{path.name === selected ? 'selected-list-element':''}").list-element    
                 input(type="checkbox", checked=(visibilities[path.name] ? "checked" : undefined)).pathVisibility
                 if editingPathname === path.name
