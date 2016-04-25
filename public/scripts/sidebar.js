@@ -36,13 +36,11 @@ function initList() {
 
     $('.pathVisibility').change(function () {
         var id = $(this).parent().parent().data("pathname");
-        console.log(id);
         visibilities[activeList][id] = $(this).is(':checked');
         saveVisibilities();
         updateView();
-        //return false;
+	updateSidebar();
     }).click(function () {
-        $(this).prop('checked', !$(this).is(':checked'));
         $(this).change();
         return false;
     });

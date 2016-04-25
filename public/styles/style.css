@@ -156,6 +156,7 @@ h3 {
     -webkit-box-sizing: border-box;
     border: 2px #3e3c41 solid inner;
     font-size: 1.8vh;
+    z-index: 10
 }
 .smalltab, .smalltab:hover {
     left: auto;
@@ -168,7 +169,7 @@ h3 {
 }
 .path-list {
     position: absolute;
-    top: 25vh;
+    top: 27vh;
     height: 68vh;
     width: 30vw;
     box-sizing: border-box;
