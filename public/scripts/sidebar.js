@@ -36,6 +36,7 @@ function initList() {
 
     $('.pathVisibility').change(function () {
         var id = $(this).parent().parent().data("pathname");
+        console.log(id);
         visibilities[activeList][id] = $(this).is(':checked');
         saveVisibilities();
         updateView();
