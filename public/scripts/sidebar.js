@@ -42,7 +42,7 @@ function initList() {
         updateView();
         //return false;
     }).click(function () {
-        $(this).attr('checked', !$(this).is(':checked'));
+        $(this).prop('checked', $(this).is(':checked') ? undefined : 'checked');
         $(this).change();
         return false;
     });
