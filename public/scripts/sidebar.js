@@ -42,7 +42,7 @@ function initList() {
         updateView();
         //return false;
     }).click(function () {
-        $(this).attr('checked', !visibilities[activeList][id]);
+        $(this).attr('checked', !$(this).is(':checked'));
         $(this).change();
         return false;
     });
