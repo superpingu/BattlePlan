@@ -42,9 +42,9 @@ function initList() {
         updateView();
         //return false;
     }).click(function () {
-        var id = $(this).parent().parent().data("pathname");
-        console.log(id);
-
+        //$(this).attr('checked', !visibilities[activeList][id]);
+        $(this).change();
+        return false;
     });
     $('.deletepath').click(function () {
         var id = $(this).parent().parent().data("pathname");
