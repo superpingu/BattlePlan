@@ -40,7 +40,11 @@ function initList() {
         visibilities[activeList][id] = $(this).is(':checked');
         saveVisibilities();
         updateView();
-        return false;
+        //return false;
+    }).click(function () {
+        var id = $(this).parent().parent().data("pathname");
+        console.log(id);
+
     });
     $('.deletepath').click(function () {
         var id = $(this).parent().parent().data("pathname");
