@@ -121,7 +121,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
         }
         skirt.onMouseLeave = function (event) {
             robot.visible = false;
-            robotText.visible = false;
+            if(robotText !== null)
+                robotText.visible = false;
         };
 
         point.onMouseDrag = function (event) {
@@ -249,7 +250,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
     function remove() {
         clear();
         robot.remove();
-        robotText.remove();
+        if(robotText !== null)
+            robotText.remove();
         path.remove();
         delete paths[name];
     }
