@@ -39,7 +39,7 @@ function initList() {
         visibilities[activeList][id] = $(this).is(':checked');
         saveVisibilities();
         updateView();
-	updateSidebar();
+	    updateSidebar();
     }).click(function () {
         $(this).change();
         return false;
@@ -80,7 +80,7 @@ function initList() {
         }
     });
     $('.initAngle').change(function () {
-        var value = parseInt($(this).val());
+        var value = parseFloat($(this).val());
         if(!isNaN(value)) {
             paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig].initAngle = value;
             updateView();
@@ -94,14 +94,14 @@ function initList() {
         updateServer();
     });
     $(".cruiseSpeed").change(function () {
-        var value = parseInt($(this).val());
+        var value = parseFloat($(this).val());
         if(!isNaN(value)) {
             paths[activeList][selectedPath[activeList]].cruiseSpeed = value;
             updateServer();
         }
     });
     $(".endSpeed").change(function () {
-        var value = parseInt($(this).val());
+        var value = parseFloat($(this).val());
         if(!isNaN(value)) {
             paths[activeList][selectedPath[activeList]].endSpeed = value;
             updateServer();

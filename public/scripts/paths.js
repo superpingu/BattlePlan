@@ -20,6 +20,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
     var robotAngle = 0;
     var isBigRobot = false;
     var robot = null;
+    var robotText = null;
     var initRobot = null;
     var selected = false;
     var visible = true;
@@ -45,8 +46,11 @@ function RobotPath(name, pointsToAdd, initAngle) {
             points[i].visible = visible&&selected;
             skirts[i].visible = visible&&selected;
         }
-        if(robot !== null && (!visible || !selected))
+        if(robot !== null && (!visible || !selected)) {
             robot.visible = false;
+            if(robotText !== null)
+                robotText.visible = false;
+        }
         if(initRobot !== null)
             initRobot.visible = visible && selected;
     }
@@ -75,6 +79,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
 
         point.onMouseEnter = function (event) {
             robot.visible = !isFirst;
+            if(robotText !== null)
+                robotText.visible = false;
             document.body.style.cursor = "crosshair";
             this.fillColor = selected ? "red" : "black";
         };
@@ -88,6 +94,11 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 robot.position = new Point(x, y-robotWheels);
                 robot.pivot = new Point(x,y);
                 robot.visible = true;
+                if(robotText !== null)
+                    robotText.remove();
+                robotText = new PointText(new Point(x+mm2width(200),y+mm2width(200)));
+                robotText.justification = 'left';
+                robotText.fillColor = 'black';
             }
         };
         if(!isFirst) {
@@ -95,6 +106,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 var angle = vec2angle(event.point-new Point(x,y));
                 robot.rotate(angle-robotAngle);
                 robotAngle = angle;
+                robotText.content = (Math.round(angle)+90)%360;
             };
         } else {
             skirt.onMouseDown = function() {
@@ -109,6 +121,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
         }
         skirt.onMouseLeave = function (event) {
             robot.visible = false;
+            robotText.visible = false;
         };
 
         point.onMouseDrag = function (event) {
@@ -195,7 +208,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 new Point(0, 0), new Point(mm2width(290), 0), new Point(mm2width(290), mm2height(270)),
                 new Point(mm2width(225), mm2height(270)), new Point(mm2width(191.5), mm2height(230)),
                 new Point(mm2width(108.5), mm2height(230)), new Point(mm2width(85), mm2height(270)),
-                new Point(mm2width(0), mm2height(270))
+                new Point(mm2width(0), mm2height(270)), new Point(0, 0)
             ];
             robotWheels = 0.037*size.height;
         } else {
@@ -214,6 +227,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
             bot.strokeWidth = 1;
             bot.strokeColor = "black";
             bot.closed = true;
+            if(big)
+                bot.join(new Path.Circle(new Point(mm2width(145), size.height/2), mm2width(235.5)));
             return bot;
         }
         if(initR) {
@@ -234,6 +249,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
     function remove() {
         clear();
         robot.remove();
+        robotText.remove();
         path.remove();
         delete paths[name];
     }
@@ -300,7 +316,7 @@ function onMouseDown(event) {
     }
     // if a path is selected
     if(selectedPath !== "") {
-        var option = event.modifiers.option || event.modifiers.alt;
+        var option = event.modifiers.option || event.modifiers.alt || Key.isDown('a');
         // alt + click on path => split a segment
         if(option && paths[selectedPath].distance(event.point))
             paths[selectedPath].addPoint(event.point.x, event.point.y, event.point);
