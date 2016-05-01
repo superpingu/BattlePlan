@@ -62,8 +62,10 @@ function startMain() {
     main.on('close', function(code, signal) {
       console.log("out : " + main.stdout);
       console.log("err : " + main.stderr);
-      if(code == -23)
+      if(code == -23) {
         startMain();
+        console.log("restart");
+      }
     });
 }
 startMain();
