@@ -1,6 +1,7 @@
 var name = require("/var/apps/rpc/config.json").name;
 var socket = require("socket.io-client")("http://abonetti.fr:3004/"+name);
 var fs = require("fs");
+var execFile = require('child_process').execFile;
 
 var pathsDir = "/var/paths/";
 
@@ -55,3 +56,14 @@ function savePath(name, path) {
         saveFile(pathsDir+name+'-purple-'+(i+1)+'.path', prefix+dumpPoints(mirrorPoints(path.purple[i].points)));
     }
 }
+
+function startMain() {
+    var main = execFile('/var/apps/main_robot/actiontest');
+    main.on('close', function(code, signal) {
+      console.log("out : " + main.stdout);
+      console.log("err : " + main.stderr);
+      if(code == -23)
+        startMain();
+    });
+}
+startMain();
