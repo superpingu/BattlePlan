@@ -153,15 +153,6 @@ function updateTabs() {
 }
 
 $(function () {
-    // change table config
-    $(".select").mouseup(function() {
-        var val = $(this).attr('id').substring(6);
-        tableConfig = parseInt(val)-1;
-        $('.selector').css('background-image', 'url(images/select'+val+'.svg)');
-        $('.table-layout').attr('src', 'images/table'+val+'.svg');
-        updateView();
-        updateSidebar();
-    });
     // tabs
     $('.smalltab').click(function () {
         activeList = 'small';
