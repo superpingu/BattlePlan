@@ -156,8 +156,8 @@ h3 {
 }
 .path-list {
     position: absolute;
-    top: 26.5vh;
-    height: 66.5vh;
+    top: 10vh;
+    height: 83vh;
     width: 30vw;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
