@@ -110,7 +110,7 @@ function initList() {
     $(".configLinkEnable").change(function () {
         var configLink = $(this).parent().find(".configLink").val();
         paths[activeList][selectedPath[activeList]].green[tableConfig].configLink = $(this).is(':checked') ? configLink : -1;
-        paths[activeList][selectedPath[activeList]].purple[tableConfig].configLink = $(this).is(':checked') ? configLink : -1;
+        paths[activeList][selectedPath[activeList]].orange[tableConfig].configLink = $(this).is(':checked') ? configLink : -1;
         if($(this).is(':checked')) {
             var tmp = tableConfig;
             tableConfig = configLink;
@@ -125,7 +125,7 @@ function initList() {
     $(".configLink").change(function () {
         var configLink = $(this).val();
         paths[activeList][selectedPath[activeList]].green[tableConfig].configLink = configLink;
-        paths[activeList][selectedPath[activeList]].purple[tableConfig].configLink = configLink;
+        paths[activeList][selectedPath[activeList]].orange[tableConfig].configLink = configLink;
         // import path
         var tmp = tableConfig;
         tableConfig = configLink;

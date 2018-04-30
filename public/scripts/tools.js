@@ -27,12 +27,12 @@ function updateView() {
                 window.globals.getPaths()[robot+'.'+path+'.green'].setRobot(robot);
                 window.globals.getPaths()[robot+'.'+path+'.green'].visible(visibilities[robot][path]);
                 window.globals.setPath(
-                    robot+'.'+path+'.purple',
-                    paths[robot][path].purple[tableConfig].points,
-                    paths[robot][path].purple[tableConfig].initAngle
+                    robot+'.'+path+'.orange',
+                    paths[robot][path].orange[tableConfig].points,
+                    paths[robot][path].orange[tableConfig].initAngle
                 );
-                window.globals.getPaths()[robot+'.'+path+'.purple'].setRobot(robot);
-                window.globals.getPaths()[robot+'.'+path+'.purple'].visible(visibilities[robot][path]);
+                window.globals.getPaths()[robot+'.'+path+'.orange'].setRobot(robot);
+                window.globals.getPaths()[robot+'.'+path+'.orange'].visible(visibilities[robot][path]);
             }
         }
     }
@@ -51,7 +51,7 @@ function updateView() {
 }
 function updatePath(name) {
     var p = decomposeViewPath(name);
-    var opposedTeam = p.team === 'green' ? 'purple' : 'green';
+    var opposedTeam = p.team === 'green' ? 'orange' : 'green';
     // true if a change in current config should change config i
     function isLinked(i) {
         var iLink = paths[p.robot][p.name][p.team][i].configLink;
@@ -169,7 +169,7 @@ function createPath(robot) {
         endSpeed: 0,
         teamMirror: true,
         green: [{points:[], configLink:-1, initAngle:90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}],
-        purple: [{points:[], configLink:-1, initAngle:-90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}]
+        orange: [{points:[], configLink:-1, initAngle:-90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}]
     };
     visibilities[robot][name] = true;
     updateView();
