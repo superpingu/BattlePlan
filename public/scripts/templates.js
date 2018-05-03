@@ -185,7 +185,7 @@ jade.render = function(node, template, data) {
 };
 
 jade.templates["path-list"] = function(locals, attrs, escape, rethrow, merge
-/**/) {
+/*``*/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -226,28 +226,7 @@ buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;');
-if ( path.green[tableConfig].configLink == -1)
-{
-buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
-}
-else
-{
-buf.push('<select class="configLink"><option');
-buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>1</option><option');
-buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>2</option><option');
-buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>3</option><option');
-buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>4</option><option');
-buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>5</option></select>');
-}
-buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)
@@ -326,28 +305,7 @@ buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;');
-if ( path.green[tableConfig].configLink == -1)
-{
-buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
-}
-else
-{
-buf.push('<select class="configLink"><option');
-buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>1</option><option');
-buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>2</option><option');
-buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>3</option><option');
-buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>4</option><option');
-buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>5</option></select>');
-}
-buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)
@@ -401,7 +359,7 @@ buf.push('<tr><td class="add-element"><a class="btn add-element-btn"><span class
 return buf.join("");
 }
 jade.templates["path-options"] = function(locals, attrs, escape, rethrow, merge
-/**/) {
+/*``*/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -412,28 +370,7 @@ buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><input');
-buf.push(attrs({ 'type':("checkbox"), 'checked':((path.green[tableConfig].configLink != -1 ? "checked" : undefined)), "class": ('configLinkEnable') }, {"type":true,"checked":true}));
-buf.push('/>Config actuelle identique &agrave; config&nbsp;');
-if ( path.green[tableConfig].configLink == -1)
-{
-buf.push('<select disabled="disabled" class="configLink"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select>');
-}
-else
-{
-buf.push('<select class="configLink"><option');
-buf.push(attrs({ 'value':("0"), 'selected':((path.green[tableConfig].configLink == 0 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>1</option><option');
-buf.push(attrs({ 'value':("1"), 'selected':((path.green[tableConfig].configLink == 1 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>2</option><option');
-buf.push(attrs({ 'value':("2"), 'selected':((path.green[tableConfig].configLink == 2 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>3</option><option');
-buf.push(attrs({ 'value':("3"), 'selected':((path.green[tableConfig].configLink == 3 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>4</option><option');
-buf.push(attrs({ 'value':("4"), 'selected':((path.green[tableConfig].configLink == 4 ? "selected" : undefined)) }, {"value":true,"selected":true}));
-buf.push('>5</option></select>');
-}
-buf.push('<br/><br/>Cap initial :&nbsp;<input');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)

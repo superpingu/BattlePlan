@@ -4,7 +4,7 @@ OUTPUT = public/scripts/templates.js
 templates: $(TEMPLATES)
 	clientjade $(TEMPLATES) > $(OUTPUT)
 
-install: templates
+install:
 	npm install
 
 run:
