@@ -12,7 +12,7 @@ function setRobotIcon(icon, ok) {
 var socket;
 $(function () {
 	window.setTimeout(function () {
-		socket = io.connect("http://localhost:3000");
+		socket = io.connect(window.location.href);
 
 		socket.on('pathUpdate', function(data) {
 			paths = data;
