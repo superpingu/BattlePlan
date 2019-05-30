@@ -5,6 +5,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var config = require('./config.json');
+var fs = require('fs');
+var serial = require('./serial.js');
 
 server.listen(3000, function () {
   console.log('Listening on port 3000');
@@ -21,14 +23,34 @@ function savePaths() {
         if(err)
             console.log("Error saving paths : " + err);
     });
-	for(var p in paths.big) {
-		if (paths.big.hasOwnProperty(p)) {
-			jsonfile.writeFile(path.join(config.bigpath, p + ".json"), paths.big[p], function(error) {
-				if(error)
-					console.log("Error saving path : " + error);
-			});
-		}
-	}
+
+    var file = '#ifndef PATHS_HPP\n#define PATHS_HPP\n\n#include "motion/AbsoluteMotion.hpp"\n\n';
+    for(var p in paths.big) {
+        if(paths.big.hasOwnProperty(p)) {
+            var points = paths.big[p].green[0].points;
+            file +="static const MotionElement " + p + "PathYellow[] = {\n";
+            for(var i in points) {
+                file += "\t{.x = " + points[i].x + ", .y = " + points[i].y;
+                file += ", .heading = " + points[i].angle + ", .speed = ";
+                file += paths.big[p].cruiseSpeed*1000 + ", .strategy = " + points[i].strategy + "},\n";
+            }
+            file += "\tEND_PATH\n};\n";
+
+            points = paths.big[p].orange[0].points;
+            file +="static const MotionElement " + p + "PathPurple[] = {\n";
+            for(var i in points) {
+                file += "\t{.x = " + points[i].x + ", .y = " + points[i].y;
+                file += ", .heading = " + points[i].angle + ", .speed = ";
+                file += paths.big[p].cruiseSpeed*1000 + ", .strategy = " + points[i].strategy + "},\n";
+            }
+            file += "\tEND_PATH\n};\n";
+
+            file += "static const MotionElement* const " + p + "Path[] = {";
+            file += p + "PathYellow" + ", " +  p + "PathPurple};\n\n";
+        }
+    }
+    file += "#endif";
+    fs.writeFile(config.bigpath, file, function(err) { if(err) { return console.log(err); } });
 }
 
 try {
@@ -50,6 +72,16 @@ io.on('connection', function (socket) {
         paths = data;
         socket.broadcast.emit('pathUpdate', paths); // update all the clients but the sender
         savePaths();
+    });
+    socket.on('test', function(data) {
+        console.log(data);
+        serial.sendPath(data, function() {
+            socket.emit('pathsent');
+        }, function(pos) {
+            socket.emit('robotpos', pos);
+        }, function() {
+            socket.emit('robotrm');
+        });
     });
     console.log("New client connected");
 });

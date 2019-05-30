@@ -3,19 +3,12 @@ div.path-options
     input(type="number", value="#{path.cruiseSpeed}").cruiseSpeed
     | &nbsp;m/s
     br
-    | Vitesse de fin :&nbsp;
-    input(type="number", value="#{path.endSpeed}").endSpeed
-    | &nbsp;m/s
-    br
     input(type="checkbox", checked=(path.teamMirror ? "checked" : undefined)).teamMirror
     | Mirroir &eacute;quipes
     br
     br
-    | Cap initial :&nbsp;
-    input(type="number", value="#{path[selectedTeam][tableConfig].initAngle}").initAngle
-    | &nbsp;&deg;
-    br
-    | Points :
+    - var teamName = selectedTeam == "green" ? "jaune" : "violette";
+    | Points : (équipe #{teamName})
     table.points-table
         if path[selectedTeam][tableConfig].points.length == 0
             br 
@@ -24,8 +17,15 @@ div.path-options
             -var i = 0;
             each point in path[selectedTeam][tableConfig].points
                 tr
-                    td.points-index=++i
-                    td x : &nbsp;
+                    -++i
+                    td x: &nbsp;
                         input(type="number", value="#{point.x}", data-index="#{i-1}").point-x
-                    td y : &nbsp;
+                    td y: &nbsp;
                         input(type="number", value="#{point.y}", data-index="#{i-1}").point-y
+                    td angle: &nbsp;
+                        input(type="number", value="#{point.angle}", data-index="#{i-1}").point-angle
+                    td
+                        select(data-index="#{i-1}").point-strategy
+                            option(value="MOVE_TURN", selected=(point.strategy == "MOVE_TURN")) MOVE TURN
+                            option(value="TURN_MOVE", selected=(point.strategy == "TURN_MOVE")) TURN MOVE
+                            option(value="TURN_RECAL", selected=(point.strategy == "TURN_RECAL")) RECAL

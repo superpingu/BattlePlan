@@ -222,13 +222,11 @@ if ( selected === path.name)
 {
 buf.push('<div class="path-options">Vitesse de croisi&egrave;re :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "class": ('cruiseSpeed') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>');
+ var teamName = selectedTeam == "green" ? "jaune" : "violette";
+buf.push('Points : (équipe ' + escape((interp = teamName) == null ? '' : interp) + ')<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)
 {
 buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
@@ -242,27 +240,45 @@ var i = 0;
     for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
     }
   } else {
     for (var $index in path[selectedTeam][tableConfig].points) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
    }
   }
 }).call(this);
@@ -301,13 +317,11 @@ if ( selected === path.name)
 {
 buf.push('<div class="path-options">Vitesse de croisi&egrave;re :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "class": ('cruiseSpeed') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>');
+ var teamName = selectedTeam == "green" ? "jaune" : "violette";
+buf.push('Points : (équipe ' + escape((interp = teamName) == null ? '' : interp) + ')<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)
 {
 buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
@@ -321,27 +335,45 @@ var i = 0;
     for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
     }
   } else {
     for (var $index in path[selectedTeam][tableConfig].points) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
    }
   }
 }).call(this);
@@ -366,13 +398,11 @@ with (locals || {}) {
 var interp;
 buf.push('<div class="path-options">Vitesse de croisi&egrave;re :&nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (path.cruiseSpeed) + ""), "class": ('cruiseSpeed') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;m/s<br/>Vitesse de fin :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path.endSpeed) + ""), "class": ('endSpeed') }, {"type":true,"value":true}));
 buf.push('/>&nbsp;m/s<br/><input');
 buf.push(attrs({ 'type':("checkbox"), 'checked':((path.teamMirror ? "checked" : undefined)), "class": ('teamMirror') }, {"type":true,"checked":true}));
-buf.push('/>Mirroir &eacute;quipes<br/><br/>Cap initial :&nbsp;<input');
-buf.push(attrs({ 'type':("number"), 'value':("" + (path[selectedTeam][tableConfig].initAngle) + ""), "class": ('initAngle') }, {"type":true,"value":true}));
-buf.push('/>&nbsp;&deg;<br/>Points :<table class="points-table">');
+buf.push('/>Mirroir &eacute;quipes<br/><br/>');
+ var teamName = selectedTeam == "green" ? "jaune" : "violette";
+buf.push('Points : (équipe ' + escape((interp = teamName) == null ? '' : interp) + ')<table class="points-table">');
 if ( path[selectedTeam][tableConfig].points.length == 0)
 {
 buf.push('<br/><p style="text-align:center; margin:0">cliquer sur la table pour ajouter des points</p>');
@@ -386,27 +416,45 @@ var i = 0;
     for (var $index = 0, $$l = path[selectedTeam][tableConfig].points.length; $index < $$l; $index++) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
     }
   } else {
     for (var $index in path[selectedTeam][tableConfig].points) {
       var point = path[selectedTeam][tableConfig].points[$index];
 
-buf.push('<tr><td class="points-index">');
-var __val__ = ++i
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</td><td>x : &nbsp;<input');
+buf.push('<tr>');
+++i
+buf.push('<td>x: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.x) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-x') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td><td>y : &nbsp;<input');
+buf.push('/></td><td>y: &nbsp;<input');
 buf.push(attrs({ 'type':("number"), 'value':("" + (point.y) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-y') }, {"type":true,"value":true,"data-index":true}));
-buf.push('/></td></tr>');
+buf.push('/></td><td>angle: &nbsp;<input');
+buf.push(attrs({ 'type':("number"), 'value':("" + (point.angle) + ""), 'data-index':("" + (i-1) + ""), "class": ('point-angle') }, {"type":true,"value":true,"data-index":true}));
+buf.push('/></td><td><select');
+buf.push(attrs({ 'data-index':("" + (i-1) + ""), "class": ('point-strategy') }, {"data-index":true}));
+buf.push('><option');
+buf.push(attrs({ 'value':("MOVE_TURN"), 'selected':((point.strategy == "MOVE_TURN")) }, {"value":true,"selected":true}));
+buf.push('>MOVE TURN</option><option');
+buf.push(attrs({ 'value':("TURN_MOVE"), 'selected':((point.strategy == "TURN_MOVE")) }, {"value":true,"selected":true}));
+buf.push('>TURN MOVE</option><option');
+buf.push(attrs({ 'value':("TURN_RECAL"), 'selected':((point.strategy == "TURN_RECAL")) }, {"value":true,"selected":true}));
+buf.push('>RECAL</option></select></td></tr>');
    }
   }
 }).call(this);

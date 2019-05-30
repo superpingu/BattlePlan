@@ -79,15 +79,27 @@ function initList() {
             updateServer();
         }
     });
-    $('.initAngle').change(function () {
-        var value = parseFloat($(this).val());
-        if(!isNaN(value)) {
-            paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig].initAngle = value;
+    $('.point-angle').change(function () {
+        var value = parseInt($(this).val());
+        var index = parseInt($(this).data("index"));
+        if(!isNaN(value) && !isNaN(index)) {
+            paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig].points[index].angle = value;
             updateView();
             updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
             updateServer();
         }
     });
+    $('.point-strategy').change(function () {
+        var value = $(this).val();
+        var index = parseInt($(this).data("index"));
+        if(!isNaN(index)) {
+            paths[activeList][selectedPath[activeList]][selectedTeam][tableConfig].points[index].strategy = value;
+            updateView();
+            updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
+            updateServer();
+        }
+    });
+
     $(".teamMirror").change(function () {
         paths[activeList][selectedPath[activeList]].teamMirror = $(this).is(':checked');
         updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
@@ -100,87 +112,13 @@ function initList() {
             updateServer();
         }
     });
-    $(".endSpeed").change(function () {
-        var value = parseFloat($(this).val());
-        if(!isNaN(value)) {
-            paths[activeList][selectedPath[activeList]].endSpeed = value;
-            updateServer();
-        }
-    });
-    $(".configLinkEnable").change(function () {
-        var configLink = $(this).parent().find(".configLink").val();
-        paths[activeList][selectedPath[activeList]].green[tableConfig].configLink = $(this).is(':checked') ? configLink : -1;
-        paths[activeList][selectedPath[activeList]].orange[tableConfig].configLink = $(this).is(':checked') ? configLink : -1;
-        if($(this).is(':checked')) {
-            var tmp = tableConfig;
-            tableConfig = configLink;
-            updateView();
-            updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
-            tableConfig = tmp;
-            updateView();
-        }
-        updateServer();
-        updateSidebar();
-    });
-    $(".configLink").change(function () {
-        var configLink = $(this).val();
-        paths[activeList][selectedPath[activeList]].green[tableConfig].configLink = configLink;
-        paths[activeList][selectedPath[activeList]].orange[tableConfig].configLink = configLink;
-        // import path
-        var tmp = tableConfig;
-        tableConfig = configLink;
-        updateView();
-        updatePath(activeList+'.'+selectedPath[activeList]+'.'+selectedTeam);
-        tableConfig = tmp;
-        updateView();
-        updateSidebar();
-        updateServer();
-    });
 }
-
-function updateTabs() {
-    if(activeList === 'small') {
-        $('#biglist').hide();
-        $('#smalllist').show();
-        $('.smalltab').addClass('selected-tab');
-        $('.bigtab').removeClass('selected-tab');
-    } else {
-        $('#smalllist').hide();
-        $('#biglist').show();
-        $('.bigtab').addClass('selected-tab');
-        $('.smalltab').removeClass('selected-tab');
-    }
-}
-
-$(function () {
-    // tabs
-    $('.smalltab').click(function () {
-        activeList = 'small';
-        updateTabs();
-        selectPath(activeList, selectedPath[activeList]);
-    });
-    $('.bigtab').click(function () {
-        activeList = 'big';
-        updateTabs();
-        selectPath(activeList, selectedPath[activeList]);
-    });
-
-    updateTabs();
-});
-
 
 function updateSidebar() {
     jade.render(document.getElementById('biglist'), 'path-list', {
         paths: paths.big,
         visibilities: visibilities.big,
         selected: selectedPath.big,
-        editingPathname: editingPathname,
-        tableConfig: tableConfig,
-    });
-    jade.render(document.getElementById('smalllist'), 'path-list', {
-        paths: paths.small,
-        visibilities: visibilities.small,
-        selected: selectedPath.small,
         editingPathname: editingPathname,
         tableConfig: tableConfig,
     });

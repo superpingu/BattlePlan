@@ -10,17 +10,18 @@ html(lang="fr")
         div.topbar
             img(src="images/raven.svg").topbar-icon
             h2.topbar-title Telecom Robotics' Battle Plan
+            a.btn.testrun
+                span.smallicon.fa.fa-play
+                | Test
         div.content
+            img(src="images/tableborders.png").table-border-layout
             img(src="images/table.png").table-layout
             canvas#table.table-layout
             div.tools
                 h2 
                     span.fa.fa-map-o
                     | Chemins
-                a.btn.btn-tab.smalltab petit robot
-                a.btn.btn-tab.bigtab.selected-tab gros robot
                 div.path-list#biglist
-                div.path-list#smalllist
         script(src="bower_components/jquery/dist/jquery.min.js")
         script(src="bower_components/js-cookie/src/js.cookie.js")
         script(src="scripts/socket.io.js")

@@ -55,6 +55,14 @@ h3 {
     background: none;
 }
 
+.testrun {
+    position: absolute;
+    top: -0.3vh;
+    right: 0;
+    font-size: 2vh;
+    padding-right: 2vh;
+}
+
 /* toolbar */
 .topbar {
     position: absolute;
@@ -102,6 +110,13 @@ h3 {
     width: 60vw;
     height: 40vw;
 }
+.table-border-layout {
+    position: absolute;
+    top: -0.425vw;
+    left: 2.575vw;
+    width: 60.85vw;
+    height: 40.85vw;
+}
 .table-side-layout {
     position: absolute;
     top: 40vw;
@@ -115,9 +130,13 @@ h3 {
     height: 93vh;
     width: 30vw;
     background-color: #fefdfa;
-    box-sizing: border-box;
     box-shadow: 0 -1px 40px rgba(32, 34, 34, 0.6);
     min-height: 600px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 2px #3e3c41 solid;
+    border-top: 0;
 }
 .points {
     position: relative;;
@@ -156,14 +175,9 @@ h3 {
 }
 .path-list {
     position: absolute;
-    top: 10vh;
-    height: 83vh;
+    top: 6vh;
+    height: 87vh;
     width: 30vw;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border: 2px #3e3c41 solid;
-    border-top: 0;
     overflow-y: scroll;
 }
 .path-list table {
@@ -202,7 +216,7 @@ h3 {
 }
 .path-options {
     padding: 1vw;
-    padding-bottom: 0;
+    padding-bottom: 1vw;
     font-size: 2vh;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -240,28 +254,33 @@ h3 {
  .teamMirror, .configLinkEnable {
     margin-right: 1vw;
 }
-.point-x, .point-y {
-    width: 7vw;
+.point-x, .point-y, .point-angle {
+    width: 3.7vw;
+    margin-right: 0.2vw;
+}
+.point-angle {
+    width: 3vw;
+}
+.point-strategy {
+    width: 7.5vw;
 }
 .points-table {
     position: relative;
-    top: -2vh;
+    top: -0.5vh;
     width: 100%;
 }
 .points-table td {
     border-bottom: none;
-    font-size: 2vh;
+    font-size: 1.7vh;
 }
 .points-table input {
-    font-size: 2vh;
+    font-size: 1.7vh;
 }
 .points-index {
-    width: 5vw;
-    text-align: center;
+    width: 2vw;
+    text-align: left;
 }
-.initAngle {
-    width: 4vw;
-}
+
 @font-face {
   font-family: 'Kirvy';
   font-style: normal;

@@ -9,19 +9,16 @@ function width2mm(value) { return value*3000/view.size.width; }
 function height2mm(value) { return value*2000/view.size.height; }
 function vec2angle(vec) {
     var rad = Math.atan2(vec.x, vec.y);
-    return 180-rad*180/Math.PI;
+    return (rad*180/Math.PI + 180) % 360;
 }
 
-function RobotPath(name, pointsToAdd, initAngle) {
+function RobotPath(name, pointsToAdd) {
     var path = new Path();
     var points = [];
     var skirts = [];
+    var robots = [];
     var robotWheels = 0;
-    var robotAngle = 0;
-    var isBigRobot = false;
-    var robot = null;
-    var robotText = null;
-    var initRobot = null;
+    var isBigRobot = true;
     var selected = false;
     var visible = true;
     path.strokeWidth = 2;
@@ -45,14 +42,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
         for (var i = 0; i < points.length; i++) {
             points[i].visible = visible&&selected;
             skirts[i].visible = visible&&selected;
+            robots[i].visible = visible&&selected;
         }
-        if(robot !== null && (!visible || !selected)) {
-            robot.visible = false;
-            if(robotText !== null)
-                robotText.visible = false;
-        }
-        if(initRobot !== null)
-            initRobot.visible = visible && selected;
     }
     function getPointIndex(x, y) {
         for (var i = 0; i < points.length; i++)
@@ -60,27 +51,23 @@ function RobotPath(name, pointsToAdd, initAngle) {
                 return i;
         return -1;
     }
-    function updateInitRobot() {
-        if(points.length === 0)
-            return;
-        createRobot(isBigRobot, true);
-        initRobot.position = new Point(points[0].position.x, points[0].position.y-robotWheels);
-        initRobot.pivot = new Point(points[0].position.x,points[0].position.y);
-        initRobot.rotate(initAngle);
-    }
-    function addPoint(x, y, nearestPoint) {
+
+    function addPoint(x, y, angle, strategy, nearestPoint) {
         var skirt = new Path.Circle(new Point(x, y), mm2width(60));
         var point = new Path.Circle(new Point(x, y), mm2width(10));
+        var robot = createRobot(isBigRobot);
+        robot.position = new Point(x, y-robotWheels);
+        robot.pivot = new Point(x,y);
+        robot.rotate(-angle);
+
+        point.angle = angle;
+        point.strategy = strategy;
         point.fillColor = "black";
         point.strokeColor = "black";
         skirt.fillColor = "black";
         skirt.opacity = 0;
-        var isFirst = points.length === 0;
 
         point.onMouseEnter = function (event) {
-            robot.visible = !isFirst;
-            if(robotText !== null)
-                robotText.visible = false;
             document.body.style.cursor = "crosshair";
             this.fillColor = selected ? "red" : "black";
         };
@@ -88,41 +75,17 @@ function RobotPath(name, pointsToAdd, initAngle) {
             document.body.style.cursor = "default";
             this.fillColor = "black";
         };
-        skirt.onMouseEnter = function (event) {
-            if(!isFirst) {
-                createRobot(isBigRobot);
-                robot.position = new Point(x, y-robotWheels);
-                robot.pivot = new Point(x,y);
-                robot.visible = true;
-                if(robotText !== null)
-                    robotText.remove();
-                robotText = new PointText(new Point(x+mm2width(200),y+mm2width(200)));
-                robotText.justification = 'left';
-                robotText.fillColor = 'black';
-            }
+        skirt.onMouseDown = function() {
+            ignore = true;
         };
-        if(!isFirst) {
-            skirt.onMouseMove = function (event) {
-                var angle = vec2angle(event.point-new Point(x,y));
-                robot.rotate(angle-robotAngle);
-                robotAngle = angle;
-                robotText.content = (Math.round(angle))%360;
-            };
-        } else {
-            skirt.onMouseDown = function() {
-                ignore = true;
-            };
-            skirt.onMouseDrag = function (event) {
-                var angle = Math.round(10*vec2angle(event.point-new Point(x,y)))/10;
-                initRobot.rotate(angle-initAngle);
-                initAngle = angle;
+        skirt.onMouseDrag = function (event) {
+            var index = getPointIndex(x, y);
+            if(index > -1) {
+                var angle = Math.round(vec2angle(event.point-new Point(x,y)));
+                robot.rotate(points[index].angle-angle);
+                points[index].angle = angle;
                 globals.updatePath(name);
-            };
-        }
-        skirt.onMouseLeave = function (event) {
-            robot.visible = false;
-            if(robotText !== null)
-                robotText.visible = false;
+            }
         };
 
         point.onMouseDrag = function (event) {
@@ -134,9 +97,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
                     path.segments[index].point = event.point;
                     x = event.point.x;
                     y = event.point.y;
-                    skirt.onMouseEnter();
-                    if(isFirst)
-                        updateInitRobot();
+                    robot.position = new Point(x, y-robotWheels);
+                    robot.pivot = new Point(x,y);
                     globals.updatePath(name);
                 }
             }
@@ -144,26 +106,23 @@ function RobotPath(name, pointsToAdd, initAngle) {
         };
         point.onMouseDown = function (event) {
             if(Key.isDown('x') && selected) {
-                if(robot !== null)
-                    robot.visible = false;
                 removePoint(x, y);
                 globals.updatePath(name);
             }
             ignore = true;
         };
 
-        skirt.onMouseEnter();
         if(typeof nearestPoint === "undefined") {
             path.add(new Point(x, y));
             points.push(point);
             skirts.push(skirt);
-            if(isFirst)
-                updateInitRobot();
-        } else{
+            robots.push(robot);
+        } else {
             var index = path.getNearestLocation(nearestPoint).index+1;
             path.insert(index, new Point(x, y));
             points.splice(index, 0, point);
             skirts.splice(index, 0, skirt);
+            robots.splice(index, 0, robot);
         }
         updateVisibility();
     }
@@ -172,9 +131,11 @@ function RobotPath(name, pointsToAdd, initAngle) {
         if(index > -1) {
             points[index].remove();
             skirts[index].remove();
+            robots[index].remove();
             path.removeSegment(index);
             points.splice(index, 1);
             skirts.splice(index, 1);
+            robots.splice(index, 1);
         }
     }
     function clear() {
@@ -184,14 +145,14 @@ function RobotPath(name, pointsToAdd, initAngle) {
         path = new Path();
         path.strokeWidth = 2;
         path.strokeColor = "black";
-        if(initRobot !== null)
-            initRobot.remove();
     }
     function getPoints() {
         function convertPoint(point) {
             return {
                 y: Math.round(2000 - height2mm(point.position.y)),
-                x: Math.round(width2mm(point.position.x))
+                x: Math.round(width2mm(point.position.x)),
+                angle: point.angle,
+                strategy: point.strategy
             };
         }
         var result = [];
@@ -199,21 +160,17 @@ function RobotPath(name, pointsToAdd, initAngle) {
             result.push(convertPoint(points[i]));
         return result;
     }
-    function createRobot(big, initR) {
+    function createRobot(big) {
         var bot, size, segments;
-        if(robot !== null)
-            robot.remove();
         if(big) {
             size = new Size(mm2width(308), mm2height(293));
             segments = [
-                new Point(0, 0), new Point(mm2width(308), 0), new Point(mm2width(308), mm2height(115)),
-                new Point(mm2width(274), mm2height(190)), new Point(mm2width(222), mm2height(190)),
-                new Point(mm2width(222), mm2height(293)), new Point(mm2width(87), mm2height(293)),
-                new Point(mm2width(87), mm2height(190)), new Point(mm2width(87), mm2height(190)),
-                new Point(mm2width(34), mm2height(190)), new Point(mm2width(0), mm2height(115)),
+                new Point(0, 0), new Point(mm2width(290), 0), new Point(mm2width(290), mm2height(270)),
+                new Point(mm2width(160), mm2height(270)), new Point(mm2width(145), mm2height(240)),
+                new Point(mm2width(130), mm2height(270)), new Point(mm2width(0), mm2height(270)),
                 new Point(mm2width(0), mm2height(0))
             ];
-            robotWheels = -0.33*size.height;
+            robotWheels = 0; //-0.5*size.height;
         } else {
             size = new Size(mm2width(208), mm2height(153));
             segments = [
@@ -233,26 +190,15 @@ function RobotPath(name, pointsToAdd, initAngle) {
 
             return bot;
         }
-        if(initR) {
-            if(initRobot !== null)
-                initRobot.remove();
-            initRobot = makeRobotPath();
-        } else {
-            robotAngle = 0;
-            robot = makeRobotPath();
-        }
-        updateVisibility();
+        return makeRobotPath();
     }
     function setPoints(pointsToSet) {
         clear();
         for(var i in pointsToSet)
-            addPoint(mm2width(pointsToSet[i].x), mm2height(2000-pointsToSet[i].y));
+            addPoint(mm2width(pointsToSet[i].x), mm2height(2000-pointsToSet[i].y), pointsToSet[i].angle, pointsToSet[i].strategy);
     }
     function remove() {
         clear();
-        robot.remove();
-        if(robotText !== null)
-            robotText.remove();
         path.remove();
         delete paths[name];
     }
@@ -263,8 +209,8 @@ function RobotPath(name, pointsToAdd, initAngle) {
             name = newName || name;
             return name;
         },
-        setInitAngle : function(angle) { initAngle = angle; },
-        getInitAngle : function() { return initAngle; },
+        setInitAngle : function(angle) {},
+        getInitAngle : function() { return 0; },
         addPoint: addPoint,
         removePoint: removePoint,
         setPoints: setPoints,
@@ -278,7 +224,7 @@ function RobotPath(name, pointsToAdd, initAngle) {
             else
                 return 4000;
         },
-        setRobot: function (big) { isBigRobot = big=='big'; createRobot(); updateInitRobot(); },
+        setRobot: function (big) { isBigRobot = big=='big'; },
         remove: remove,
         visible: function (vis) {
             visible = vis;
@@ -288,12 +234,11 @@ function RobotPath(name, pointsToAdd, initAngle) {
     };
 }
 
-function setPath(name,pointsToAdd, initAngle) {
+function setPath(name,pointsToAdd) {
     if(paths.hasOwnProperty(name)) {
         paths[name].setPoints(pointsToAdd);
-        paths[name].setInitAngle(initAngle);
     } else {
-        paths[name] = RobotPath(name, pointsToAdd, initAngle);
+        paths[name] = RobotPath(name, pointsToAdd);
     }
 }
 function selectPath(robot, name) {
@@ -322,9 +267,9 @@ function onMouseDown(event) {
         var option = event.modifiers.option || event.modifiers.alt || Key.isDown('a');
         // alt + click on path => split a segment
         if(option && paths[selectedPath].distance(event.point))
-            paths[selectedPath].addPoint(event.point.x, event.point.y, event.point);
+            paths[selectedPath].addPoint(event.point.x, event.point.y, 0, "MOVE_TURN", event.point);
         else
-            paths[selectedPath].addPoint(event.point.x, event.point.y);
+            paths[selectedPath].addPoint(event.point.x, event.point.y, 0, "MOVE_TURN");
         globals.updatePath(selectedPath);
     }
 }
@@ -332,3 +277,30 @@ function onMouseDown(event) {
 globals.setPath = setPath;
 globals.getPaths = function () { return paths; };
 globals.selectPath = selectPath;
+
+var simRobot = null;
+globals.drawRobot = function(x, y, heading) {
+    if(simRobot != null)
+        simRobot.remove();
+    var segments = [
+        new Point(0, 0), new Point(mm2width(290), 0), new Point(mm2width(290), mm2height(270)),
+        new Point(mm2width(160), mm2height(270)), new Point(mm2width(145), mm2height(240)),
+        new Point(mm2width(130), mm2height(270)), new Point(mm2width(0), mm2height(270)),
+        new Point(mm2width(0), mm2height(0))
+    ];
+    simRobot = new Path(segments);
+    simRobot.visible = true;
+    simRobot.strokeWidth = 1;
+    simRobot.fillColor = "black";
+    simRobot.closed = true;
+    simRobot.position = new Point(mm2width(x), mm2height(2000-y));
+    simRobot.pivot = new Point(mm2width(x), mm2height(2000-y));
+    simRobot.rotate(-heading);
+    _needsUpdate = true;
+    view.update();
+};
+globals.removeRobot = function() {
+    simRobot.remove();
+    _needsUpdate = true;
+    view.update();
+};

@@ -21,15 +21,13 @@ function updateView() {
             if (paths[robot].hasOwnProperty(path)) {
                 window.globals.setPath(
                     robot+'.'+path+'.green',
-                    paths[robot][path].green[tableConfig].points,
-                    paths[robot][path].green[tableConfig].initAngle
+                    paths[robot][path].green[tableConfig].points
                 );
                 window.globals.getPaths()[robot+'.'+path+'.green'].setRobot(robot);
                 window.globals.getPaths()[robot+'.'+path+'.green'].visible(visibilities[robot][path]);
                 window.globals.setPath(
                     robot+'.'+path+'.orange',
-                    paths[robot][path].orange[tableConfig].points,
-                    paths[robot][path].orange[tableConfig].initAngle
+                    paths[robot][path].orange[tableConfig].points
                 );
                 window.globals.getPaths()[robot+'.'+path+'.orange'].setRobot(robot);
                 window.globals.getPaths()[robot+'.'+path+'.orange'].visible(visibilities[robot][path]);
@@ -61,30 +59,26 @@ function updatePath(name) {
     function mirrorPoints(points) {
         var result = [];
         for (var i in points)
-            result.push({x: 3000 - points[i].x, y: points[i].y});
+            result.push({x: 3000 - points[i].x, y: points[i].y, angle: (360-points[i].angle) % 360, strategy: points[i].strategy});
         return result;
     }
     var points = window.globals.getPaths()[name].getPoints();
-    var angle = window.globals.getPaths()[name].getInitAngle();
-    var opposedPoints = mirrorPoints(points), opposedAngle = (360 - angle) % 360;
+    var angle = 0;
+    var opposedPoints = mirrorPoints(points);
 
     paths[p.robot][p.name][p.team][tableConfig].points = points;
-    paths[p.robot][p.name][p.team][tableConfig].initAngle = angle;
     if(paths[p.robot][p.name].teamMirror) {
         paths[p.robot][p.name][opposedTeam][tableConfig].points = opposedPoints;
-        paths[p.robot][p.name][opposedTeam][tableConfig].initAngle = opposedAngle;
-        window.globals.setPath(p.robot+'.'+p.name+'.'+opposedTeam, opposedPoints, opposedAngle);
+        window.globals.setPath(p.robot+'.'+p.name+'.'+opposedTeam, opposedPoints);
         // refresh view
         paper.project._needsUpdate = true;
         paper.project.view.update();
     }
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 1; i++) {
         if(i != tableConfig && isLinked(i)) {
             paths[p.robot][p.name][p.team][i].points = points.slice(0);
-            paths[p.robot][p.name][p.team][i].initAngle = angle;
             if(paths[p.robot][p.name].teamMirror) {
                 paths[p.robot][p.name][opposedTeam][i].points = opposedPoints.slice(0);
-                paths[p.robot][p.name][opposedTeam][i].initAngle = opposedAngle;
             }
         }
     }
@@ -98,7 +92,6 @@ function onPathSelect(name) {
     selectedPath[activeList] = path.name;
     selectedTeam = path.team;
     updateSidebar();
-    updateTabs();
 }
 
 // send the current paths to the server
@@ -168,8 +161,8 @@ function createPath(robot) {
         cruiseSpeed: 0.3,
         endSpeed: 0,
         teamMirror: true,
-        green: [{points:[], configLink:-1, initAngle:90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}, {points:[], configLink:0, initAngle: 90}],
-        orange: [{points:[], configLink:-1, initAngle:-90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}, {points:[], configLink:0, initAngle: -90}]
+        green: [{points:[], configLink:-1}],
+        orange: [{points:[], configLink:-1}]
     };
     visibilities[robot][name] = true;
     updateView();
